@@ -5,9 +5,12 @@ using UnityEngine;
 public class FollowPlayer : MonoBehaviour {
 
     [SerializeField]
-    GameObject m_Target;
-     Vector3 m_OffsetCamera = new Vector3(1.5f,-1f,-8f);
+    Transform m_Player;
+    [SerializeField]
+    Transform m_Target;
+    public Vector3 m_OffsetCamera = new Vector3(1.5f,1f,-8f);
     private Vector3 velocity = Vector3.zero;
+    private Vector3 m_CameraPos;
     public float timeDamp;
 
 
@@ -20,17 +23,28 @@ public class FollowPlayer : MonoBehaviour {
     void Update()
     {
 
-        transform.position = m_Target.transform.position + m_OffsetCamera;
+        
 
     }
 
 	// Update is called once per frame
 	void LateUpdate ()
     {
+
+       // m_OffsetCamera = Quaternion.AngleAxis(Input.GetAxis("Mouse X") * 4f, Vector3.up) * m_OffsetCamera;
+        
+        
+
+        if(m_Target.transform.position.z > m_Player.transform.position.z)
+            m_CameraPos = m_Player.transform.position + m_OffsetCamera;
+        else if (m_Target.transform.position.z < m_Player.transform.position.z)
+            m_CameraPos = m_Player.transform.position + new Vector3(1.5f, 1f, 8f);
+
+
+        transform.position = Vector3.SmoothDamp(transform.position, m_CameraPos, ref velocity, timeDamp);
         transform.LookAt(m_Target.transform);
-    
-        //Vector3.SmoothDamp(transform.position, m_Target.transform.position, ref velocity, timeDamp);
-   
+
+
 
     }
 }
