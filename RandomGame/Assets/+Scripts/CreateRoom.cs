@@ -5,41 +5,50 @@ using UnityEngine;
 public class CreateRoom : MonoBehaviour
 {
 
-    public List<GameObject> m_LCubes;
-    List<GameObject> m_LRooms = new List<GameObject>();
+    List<GameObject> m_LCubes;
+    List<GameObject> m_LHalls;
+
+    GameObject m_Room;
     public LayerMask m_unwalkableMask;
     int x = 0;
-    bool coli = true;
+    
     public GameObject Player;
-    List<bool> m_Collision = new List<bool>();
+    List<bool> m_Collision;
     [SerializeField]
     GameObject m_Hall_Cubes;
     [SerializeField]
     GameObject m_Cubes;
     private Vector3 m_CubePos;
     bool done;
-    bool start = false;
+    bool start;
+
 
     // Use this for initialization
     void Awake()
     {
-        for (int i = 0; i < 5; i++)
-        {
-            m_Collision.Add(false);
-
-        }
+        m_Collision = new List<bool>();
+        start = false;
+        done = false;
+        m_Room = GameObject.FindGameObjectWithTag("ParentRoom");
 
     }
 
     void Start()
     {
-        done = false;
-
         CreateRandomRoom();
-     
-
+        for (int i = 0; i < m_LCubes.Count; i++)
+        {
+            m_Collision.Add(false);
+        }
     }
     void Update()
+    {
+        ConnectRooms();
+
+    }
+
+    // Update is called once per frame
+    void ConnectRooms()
     {
         int col = 0;
         for (int i = 0; i < m_LCubes.Count; i++)
@@ -48,13 +57,11 @@ public class CreateRoom : MonoBehaviour
             if (m_LCubes[i].GetComponent<CollisionScr>().CollisionRoom == false && start == true)
             {
                 m_Collision[i] = true;
-
             }
             else
             {
                 m_Collision[i] = false;
             }
-          
         }
         for (int i = 0; i < m_Collision.Count; i++)
         {
@@ -67,29 +74,27 @@ public class CreateRoom : MonoBehaviour
             {
                 col--;
             }
-            print(col);
         }
-        
-        if (col >= 5 && done == false)
-        {
-            ConnectRooms();
 
+        if (col >= m_Collision.Count && done == false)
+        {
+            ConnectRoomsAlg();
+            Parrent();
             done = true;
         }
         start = true;
 
-    }
 
-    // Update is called once per frame
+    }
 
     void CreateRandomRoom()
     {
 
         // Create list for a room and randoms for how many cubes for x and z pos
         m_LCubes = new List<GameObject>();
-        int planeRand = Random.Range(15, 30);
+        int planeRand = Random.Range(4, 10);
          
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < planeRand; i++)
         {
             int randX = Random.Range(10, 20);
             int randZ = Random.Range(10, 20);
@@ -100,10 +105,11 @@ public class CreateRoom : MonoBehaviour
             m_LCubes[i].transform.name = ("Hej " + i);
         }
 
+
     }
-    void ConnectRooms()
+    void ConnectRoomsAlg()
     {
-        
+        m_LHalls = new List<GameObject>();
         GameObject a, b, c = null;
         float abDist, acDist = 0, bcDist = 0;
         bool skip;
@@ -141,8 +147,8 @@ public class CreateRoom : MonoBehaviour
                         GameObject cube = Instantiate(m_Hall_Cubes, a.transform.position, Quaternion.identity);                       
                         cube.transform.localScale = new Vector3(Mathf.Abs(distX), 0.1f, 2);
                         cube.transform.position += new Vector3((-distX / 2) - 1, 0.95f, 0);
+                        m_LHalls.Add(cube);
 
-                      
                     }
                     else if (!leftOrRight(a, b))
                     {
@@ -150,7 +156,7 @@ public class CreateRoom : MonoBehaviour
                         GameObject cube = Instantiate(m_Hall_Cubes, a.transform.position, Quaternion.identity);
                         cube.transform.localScale = new Vector3(Mathf.Abs(distX), 0.1f, 2);
                         cube.transform.position += new Vector3(Mathf.Abs(distX / 2) + 1 , 0.95f,0);
-                        
+                        m_LHalls.Add(cube);
                     }
                     if (topOrBottom(a, b))
                     {
@@ -158,7 +164,7 @@ public class CreateRoom : MonoBehaviour
                         GameObject cube = Instantiate(m_Hall_Cubes, b.transform.position, Quaternion.identity);
                         cube.transform.localScale = new Vector3(2, 0.1f, Mathf.Abs(distZ));
                         cube.transform.position += new Vector3(0, 0.95f, (distZ / 2) + 1);
-
+                        m_LHalls.Add(cube);
 
                     }
                      else if (!topOrBottom(a, b))
@@ -167,7 +173,9 @@ public class CreateRoom : MonoBehaviour
                         GameObject cube = Instantiate(m_Hall_Cubes, b.transform.position, Quaternion.identity);
                         cube.transform.localScale = new Vector3(2, 0.1f, Mathf.Abs(distZ));
                         cube.transform.position += new Vector3(0, 0.95f, (-distZ / 2) - 1);
+                        m_LHalls.Add(cube);
                     }
+                    
 
                 }
             } 
@@ -182,7 +190,7 @@ public class CreateRoom : MonoBehaviour
     {
         return a.transform.position.z > b.transform.position.z; // if a.z is bigger then b is below a
     }
-    public void Math(GameObject a, GameObject b)
+    public void SeperationAlg(GameObject a, GameObject b)
     {
 
         float aRight = a.transform.localScale.x / 2;
@@ -222,27 +230,40 @@ public class CreateRoom : MonoBehaviour
         if (x > 20)
         {
             a.transform.position += new Vector3(dxa + 50, 0, dya + 50) * Time.deltaTime;
-            b.transform.position += new Vector3(dxb, 0, dyb) * Time.deltaTime;
+            b.transform.position += new Vector3(dxb, 0, dyb);
             x = 0;
         }
         else
         {
-            a.transform.position += new Vector3(dxa, 0, dya) * Time.deltaTime;
-            b.transform.position += new Vector3(dxb, 0, dyb) * Time.deltaTime;
+            a.transform.position += new Vector3(dxa, 0, dya);
+            b.transform.position += new Vector3(dxb, 0, dyb);
             x++;
         }
 
 
     }
 
-    public void Collision(GameObject a,GameObject b)
+    public void Seperation(GameObject a,GameObject b)
     {
-        Math(a, b);
+        SeperationAlg(a, b);
     }
-    public bool CollisionBool(bool collision)
+    void Parrent()
     {
-        coli = collision;
-        return collision;
-    }
+        GameObject pf = (GameObject)Instantiate(m_Room);
 
+        foreach (GameObject a in m_LCubes)
+        {
+
+            a.transform.parent = pf.transform;
+
+        }
+        foreach (GameObject a in m_LHalls)
+        {
+
+            a.transform.parent = pf.transform;
+
+        }
+
+
+    }
 }

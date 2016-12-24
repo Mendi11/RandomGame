@@ -13,6 +13,7 @@ public class CollisionScr : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        hello = GameObject.FindGameObjectWithTag("PG");
         otherCube = null; 
     }
 
@@ -20,30 +21,23 @@ public class CollisionScr : MonoBehaviour {
     void FixedUpdate()
     {
        
-    
             if (coll > 0)
             {
                 m_Collision = true;
-                hello.GetComponent<CreateRoom>().CollisionBool(m_Collision);
             }
             else if (coll <= 0)
             {
                 m_Collision = false;
-                hello.GetComponent<CreateRoom>().CollisionBool(m_Collision);
             }
-
-        
- 
-
 
     }
     void Update()
     {
-
         while (m_Collision == true)
         {
-            hello.GetComponent<CreateRoom>().Collision(this.gameObject, otherCube);
-            hello.GetComponent<CreateRoom>().CollisionBool(m_Collision);
+            if (hello == null)
+                continue;
+            hello.GetComponent<CreateRoom>().Seperation(this.gameObject, otherCube);
             x -= 1;
             if (x < 0)
                 break;
@@ -58,8 +52,6 @@ public class CollisionScr : MonoBehaviour {
                 coll += 1;
             }
     }
-
-
     
     void OnTriggerExit(Collider col)
     {

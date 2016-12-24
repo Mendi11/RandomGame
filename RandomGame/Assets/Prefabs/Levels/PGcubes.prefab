@@ -20,10 +20,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4835797474072612}
   - component: {fileID: 114115542758252594}
-  - component: {fileID: 114224313115981580}
   m_Layer: 0
   m_Name: PGcubes
-  m_TagString: Untagged
+  m_TagString: PG
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,20 +51,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac30b6e4dacb334b99acf3e62644a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LCubes: []
   m_unwalkableMask:
     serializedVersion: 2
     m_Bits: 256
+  Player: {fileID: 1170285583589920, guid: 9e1cd8ca8502497499722b68f34669c7, type: 2}
+  m_Hall_Cubes: {fileID: 1990916906994038, guid: 257ceabf7ba24834dacc67c760e9c1c6,
+    type: 2}
   m_Cubes: {fileID: 1626782906506758, guid: 19fcd756d35ee1f4797e334d6e9c3ae7, type: 2}
-  m_Rooms: {fileID: 0}
---- !u!114 &114224313115981580
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1150030038401340}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2148875cec214a4f978b642d83c4692, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
