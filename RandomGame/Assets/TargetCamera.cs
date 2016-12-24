@@ -21,8 +21,7 @@ public class TargetCamera : MonoBehaviour {
     }
     void LateUpdate()
     {
-        //offset = Quaternion.AngleAxis(Input.GetAxis("Mouse Y") * Time.deltaTime, Vector3.right) * offset;
-        //transform.position = offset;
+        
 
     }
 }

@@ -7,6 +7,7 @@ public class CreateRoom : MonoBehaviour
 
     List<GameObject> m_LCubes;
     List<GameObject> m_LHalls;
+    private bool m_SetTrigger = false;
 
     GameObject m_Room;
     public LayerMask m_unwalkableMask;
@@ -44,7 +45,6 @@ public class CreateRoom : MonoBehaviour
     void Update()
     {
         ConnectRooms();
-
     }
 
     // Update is called once per frame
@@ -80,6 +80,11 @@ public class CreateRoom : MonoBehaviour
         {
             ConnectRoomsAlg();
             Parrent();
+            for (int i = 0; i < m_LCubes.Count; i++)
+            {
+                m_LCubes[i].GetComponent<BoxCollider>().isTrigger = false;
+
+            }
             done = true;
         }
         start = true;

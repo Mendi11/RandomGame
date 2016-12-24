@@ -7,10 +7,12 @@ public class Movement : MonoBehaviour {
     public float m_RotateSpeed;
     private Transform m_Target;
     private Rigidbody m_Rgb;
+    private Collider col;
 
   
     // Use this for initialization
     void Start () {
+        col = GetComponent<CapsuleCollider>();
         m_Rgb = GetComponent<Rigidbody>();
         m_Target = GameObject.Find("Target").GetComponent<Transform>();
        // transform.position += new Vector3(0, 2, 0);
@@ -41,8 +43,9 @@ public class Movement : MonoBehaviour {
         if (Input.GetKey(KeyCode.D))
         {
             m_Rgb.velocity = new Vector3(1 * moveDir.z, 0, 0) * Time.deltaTime * m_Speed;
-        }
 
+        }
+        
 
     }
     // Update is called once per frame
