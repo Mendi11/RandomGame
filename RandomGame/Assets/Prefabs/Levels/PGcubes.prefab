@@ -54,7 +54,8 @@ MonoBehaviour:
   m_unwalkableMask:
     serializedVersion: 2
     m_Bits: 256
-  Player: {fileID: 1170285583589920, guid: 9e1cd8ca8502497499722b68f34669c7, type: 2}
+  m_Player: {fileID: 1170285583589920, guid: 9e1cd8ca8502497499722b68f34669c7, type: 2}
   m_Hall_Cubes: {fileID: 1990916906994038, guid: 257ceabf7ba24834dacc67c760e9c1c6,
     type: 2}
   m_Cubes: {fileID: 1626782906506758, guid: 19fcd756d35ee1f4797e334d6e9c3ae7, type: 2}
+  m_Camera: {fileID: 1358408935492284, guid: 04dc1725dae160449b30f8e5fd5095f7, type: 2}

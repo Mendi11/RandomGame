@@ -7,26 +7,33 @@ public class CreateRoom : MonoBehaviour
 
     List<GameObject> m_LCubes;
     List<GameObject> m_LHalls;
-    private bool m_SetTrigger = false;
+
 
     GameObject m_Room;
     public LayerMask m_unwalkableMask;
     int x = 0;
     
-    public GameObject Player;
+    public GameObject m_Player;
     List<bool> m_Collision;
     [SerializeField]
     GameObject m_Hall_Cubes;
     [SerializeField]
     GameObject m_Cubes;
+    [SerializeField]
+    GameObject m_Camera;
     private Vector3 m_CubePos;
     bool done;
     bool start;
+
+    GameObject m_Canvas;
+    GameObject m_CameraCanvas;
 
 
     // Use this for initialization
     void Awake()
     {
+        m_CameraCanvas = GameObject.Find("Camera");
+        m_Canvas = GameObject.Find("Canvas"); 
         m_Collision = new List<bool>();
         start = false;
         done = false;
@@ -53,7 +60,6 @@ public class CreateRoom : MonoBehaviour
         int col = 0;
         for (int i = 0; i < m_LCubes.Count; i++)
         {
-            print(m_LCubes[i].GetComponent<CollisionScr>().CollisionRoom);
             if (m_LCubes[i].GetComponent<CollisionScr>().CollisionRoom == false && start == true)
             {
                 m_Collision[i] = true;
@@ -85,6 +91,11 @@ public class CreateRoom : MonoBehaviour
                 m_LCubes[i].GetComponent<BoxCollider>().isTrigger = false;
 
             }
+            m_Canvas.SetActive(false);
+            Destroy(m_CameraCanvas);
+            Instantiate(m_Player, m_LCubes[0].transform.position + new Vector3(0, 3f, 2f), Quaternion.identity);
+            Instantiate(m_Camera);
+
             done = true;
         }
         start = true;
@@ -101,8 +112,8 @@ public class CreateRoom : MonoBehaviour
          
         for (int i = 0; i < planeRand; i++)
         {
-            int randX = Random.Range(10, 20);
-            int randZ = Random.Range(10, 20);
+            int randX = Random.Range(15, 25);
+            int randZ = Random.Range(15, 25);
             m_CubePos = new Vector3(Random.Range(-50, 50), 0, Random.Range(-50, 50));
             m_LCubes.Add(Instantiate(m_Cubes, m_CubePos, Quaternion.identity)); // Create a new Cube and adds it to the list.
             Vector3 scale = new Vector3(randX, 2, randZ);
@@ -145,12 +156,11 @@ public class CreateRoom : MonoBehaviour
                 }
                 if (!skip)
                 {
-                    float rightSide = a.transform.localScale.x / 2;
                     if (leftOrRight(a,b))
                     {
                         float distX = a.transform.position.x - b.transform.position.x;
                         GameObject cube = Instantiate(m_Hall_Cubes, a.transform.position, Quaternion.identity);                       
-                        cube.transform.localScale = new Vector3(Mathf.Abs(distX), 0.1f, 2);
+                        cube.transform.localScale = new Vector3(Mathf.Abs(distX), 0.1f, 5);
                         cube.transform.position += new Vector3((-distX / 2) - 1, 0.95f, 0);
                         m_LHalls.Add(cube);
 
@@ -159,7 +169,7 @@ public class CreateRoom : MonoBehaviour
                     {
                         float distX = b.transform.position.x - a.transform.position.x;
                         GameObject cube = Instantiate(m_Hall_Cubes, a.transform.position, Quaternion.identity);
-                        cube.transform.localScale = new Vector3(Mathf.Abs(distX), 0.1f, 2);
+                        cube.transform.localScale = new Vector3(Mathf.Abs(distX), 0.1f, 5);
                         cube.transform.position += new Vector3(Mathf.Abs(distX / 2) + 1 , 0.95f,0);
                         m_LHalls.Add(cube);
                     }
@@ -167,7 +177,7 @@ public class CreateRoom : MonoBehaviour
                     {
                         float distZ = a.transform.position.z - b.transform.position.z;
                         GameObject cube = Instantiate(m_Hall_Cubes, b.transform.position, Quaternion.identity);
-                        cube.transform.localScale = new Vector3(2, 0.1f, Mathf.Abs(distZ));
+                        cube.transform.localScale = new Vector3(5, 0.1f, Mathf.Abs(distZ));
                         cube.transform.position += new Vector3(0, 0.95f, (distZ / 2) + 1);
                         m_LHalls.Add(cube);
 
@@ -176,7 +186,7 @@ public class CreateRoom : MonoBehaviour
                     {
                         float distZ = b.transform.position.z - a.transform.position.z;
                         GameObject cube = Instantiate(m_Hall_Cubes, b.transform.position, Quaternion.identity);
-                        cube.transform.localScale = new Vector3(2, 0.1f, Mathf.Abs(distZ));
+                        cube.transform.localScale = new Vector3(5, 0.1f, Mathf.Abs(distZ));
                         cube.transform.position += new Vector3(0, 0.95f, (-distZ / 2) - 1);
                         m_LHalls.Add(cube);
                     }
@@ -234,7 +244,7 @@ public class CreateRoom : MonoBehaviour
         //print("Colliding!");
         if (x > 20)
         {
-            a.transform.position += new Vector3(dxa + 50, 0, dya + 50) * Time.deltaTime;
+            a.transform.position += new Vector3(dxa + 100, 0, dya + 100) * Time.deltaTime;
             b.transform.position += new Vector3(dxb, 0, dyb);
             x = 0;
         }
