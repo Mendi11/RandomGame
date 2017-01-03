@@ -7,6 +7,10 @@ TagManager:
   - Room
   - ParentRoom
   - PG
+  - Wall
+  - PlayerCamera
+  - Sword
+  - Enemie
   layers:
   - Default
   - TransparentFX
@@ -17,9 +21,9 @@ TagManager:
   - 
   - 
   - Rooms
-  - 
-  - 
-  - 
+  - Sword
+  - Player
+  - Enemy
   - 
   - 
   - 

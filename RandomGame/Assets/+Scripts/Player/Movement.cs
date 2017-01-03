@@ -5,11 +5,12 @@ using UnityEngine;
 public class Movement : MonoBehaviour {
     public float m_Speed;
     public float m_RotateSpeed;
+
     private Transform m_Target;
     private Rigidbody m_Rgb;
-    public Vector3 m_Movment;
 
-  
+    private Vector3 rotation = Vector3.zero;
+    private float Sensitivity = 90f;
     // Use this for initialization
     void Start ()
     {
@@ -19,30 +20,44 @@ public class Movement : MonoBehaviour {
 	}
     void FixedUpdate()
     {
-        float m_MouseX = Input.GetAxis("Mouse X");
-        float m_MouseY = Input.GetAxis("Mouse Y");
-        transform.Rotate(new Vector3(-m_MouseY, m_MouseX, 0) * Time.deltaTime * m_RotateSpeed);
-        Vector3 moveDir = m_Target.position - transform.position;
+        
+       
+
+    }
+    // Update is called once per frame
+	void Update ()
+    {
+        // Player rotation
+        rotation += Vector3.up *  Input.GetAxis("Mouse X") * Sensitivity * Time.deltaTime;
+        rotation += Vector3.left * Input.GetAxis("Mouse Y")  * Sensitivity * Time.deltaTime; 
+        transform.rotation = Quaternion.Euler(rotation);
+
+        //transform.Rotate(new Vector3(-mouseY, mouseX, 0) * Time.deltaTime * m_RotateSpeed);//Rotate the player for inverted remove - on m_MouseY
+
+        Vector3 moveDir = m_Target.position - transform.position; /// Get the direction the player should move
         moveDir = moveDir.normalized;
-        print(moveDir);
+
+
+
+        //Movment
         if (Input.GetKey(KeyCode.W))
         {
-            m_Rgb.velocity = new Vector3(Mathf.RoundToInt(moveDir.x), 0, Mathf.RoundToInt(moveDir.z)) * Time.deltaTime * m_Speed;
+            m_Rgb.velocity = new Vector3(moveDir.x, 0, moveDir.z) * Time.deltaTime * m_Speed;
 
         }
         if (Input.GetKey(KeyCode.S))
         {
-            m_Rgb.velocity = new Vector3(Mathf.RoundToInt(-moveDir.x), 0, Mathf.RoundToInt(-moveDir.z)) * Time.deltaTime * m_Speed;
+            m_Rgb.velocity = new Vector3(-moveDir.x, 0, -moveDir.z) * Time.deltaTime * m_Speed;
 
         }
         if (Input.GetKey(KeyCode.A))
         {
-            m_Rgb.velocity = new Vector3(Mathf.RoundToInt(-moveDir.z), 0, Mathf.RoundToInt(moveDir.x)) * Time.deltaTime * m_Speed;
+            m_Rgb.velocity = new Vector3(-moveDir.z, 0, moveDir.x) * Time.deltaTime * m_Speed;
 
         }
         if (Input.GetKey(KeyCode.D))
         {
-            m_Rgb.velocity = new Vector3(Mathf.RoundToInt(moveDir.z), 0, Mathf.RoundToInt(-moveDir.x)) * Time.deltaTime * m_Speed;
+            m_Rgb.velocity = new Vector3(moveDir.z, 0, -moveDir.x) * Time.deltaTime * m_Speed;
 
         }
         if (Input.GetKey(KeyCode.LeftShift)) // Sprint
@@ -54,10 +69,24 @@ public class Movement : MonoBehaviour {
             m_Speed = 250;
         }
 
-    }
-    // Update is called once per frame
-	void Update ()
-    {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         if (Input.GetKeyDown(KeyCode.C))// Lock mouse and makes it invisible
         {
             Cursor.lockState = CursorLockMode.Locked;

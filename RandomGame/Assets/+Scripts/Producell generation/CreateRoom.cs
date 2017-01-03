@@ -5,12 +5,11 @@ using UnityEngine;
 public class CreateRoom : MonoBehaviour
 {
 
-    List<GameObject> m_LCubes;
+   public List<GameObject> m_LRooms;
     List<GameObject> m_LHalls;
 
-
     GameObject m_Room;
-    public LayerMask m_unwalkableMask;
+
     int x = 0;
     
     public GameObject m_Player;
@@ -21,8 +20,11 @@ public class CreateRoom : MonoBehaviour
     GameObject m_Cubes;
     [SerializeField]
     GameObject m_Camera;
+
+
+
     private Vector3 m_CubePos;
-    bool done;
+    public bool done;
     bool start;
 
     GameObject m_Canvas;
@@ -32,6 +34,7 @@ public class CreateRoom : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        
         m_CameraCanvas = GameObject.Find("Camera");
         m_Canvas = GameObject.Find("Canvas"); 
         m_Collision = new List<bool>();
@@ -44,7 +47,7 @@ public class CreateRoom : MonoBehaviour
     void Start()
     {
         CreateRandomRoom();
-        for (int i = 0; i < m_LCubes.Count; i++)
+        for (int i = 0; i < m_LRooms.Count; i++)
         {
             m_Collision.Add(false);
         }
@@ -58,9 +61,9 @@ public class CreateRoom : MonoBehaviour
     void ConnectRooms()
     {
         int col = 0;
-        for (int i = 0; i < m_LCubes.Count; i++)
+        for (int i = 0; i < m_LRooms.Count; i++)
         {
-            if (m_LCubes[i].GetComponent<CollisionScr>().CollisionRoom == false && start == true)
+            if (m_LRooms[i].GetComponent<CollisionScr>().CollisionRoom == false && start == true)
             {
                 m_Collision[i] = true;
             }
@@ -86,14 +89,15 @@ public class CreateRoom : MonoBehaviour
         {
             ConnectRoomsAlg();
             Parrent();
-            for (int i = 0; i < m_LCubes.Count; i++)
+
+            for (int i = 0; i < m_LRooms.Count; i++)
             {
-                m_LCubes[i].GetComponent<BoxCollider>().isTrigger = false;
+                m_LRooms[i].GetComponent<BoxCollider>().isTrigger = false;
 
             }
             m_Canvas.SetActive(false);
             Destroy(m_CameraCanvas);
-            Instantiate(m_Player, m_LCubes[0].transform.position + new Vector3(0, 3f, 2f), Quaternion.identity);
+            Instantiate(m_Player, m_LRooms[0].transform.position + new Vector3(0, 3f, 2f), Quaternion.identity);
             Instantiate(m_Camera);
 
             done = true;
@@ -107,7 +111,7 @@ public class CreateRoom : MonoBehaviour
     {
 
         // Create list for a room and randoms for how many cubes for x and z pos
-        m_LCubes = new List<GameObject>();
+        m_LRooms = new List<GameObject>();
         int planeRand = Random.Range(4, 10);
          
         for (int i = 0; i < planeRand; i++)
@@ -115,10 +119,10 @@ public class CreateRoom : MonoBehaviour
             int randX = Random.Range(15, 25);
             int randZ = Random.Range(15, 25);
             m_CubePos = new Vector3(Random.Range(-50, 50), 0, Random.Range(-50, 50));
-            m_LCubes.Add(Instantiate(m_Cubes, m_CubePos, Quaternion.identity)); // Create a new Cube and adds it to the list.
+            m_LRooms.Add(Instantiate(m_Cubes, m_CubePos, Quaternion.identity)); // Create a new Cube and adds it to the list.
             Vector3 scale = new Vector3(randX, 2, randZ);
-            m_LCubes[i].transform.localScale = scale;
-            m_LCubes[i].transform.name = ("Hej " + i);
+            m_LRooms[i].transform.localScale = scale;
+            m_LRooms[i].transform.name = ("Hej " + i);
         }
 
 
@@ -130,19 +134,19 @@ public class CreateRoom : MonoBehaviour
         float abDist, acDist = 0, bcDist = 0;
         bool skip;
 
-        for (int i = 0; i < m_LCubes.Count; i++)
+        for (int i = 0; i < m_LRooms.Count; i++)
         {
-            a = m_LCubes[i];
-            for (int j = i + 1; j < m_LCubes.Count; j++)
+            a = m_LRooms[i];
+            for (int j = i + 1; j < m_LRooms.Count; j++)
             {
                 skip = false;
-                b = m_LCubes[j];
+                b = m_LRooms[j];
                 abDist = Mathf.Pow(a.transform.position.x - b.transform.position.x, 2) + Mathf.Pow(a.transform.position.z - b.transform.position.z, 2);
-                for (int k = 0; k < m_LCubes.Count; k++)
+                for (int k = 0; k < m_LRooms.Count; k++)
                 {
                     if (k == i || k == j)
                         continue;
-                    c = m_LCubes[k];
+                    c = m_LRooms[k];
                     acDist = Mathf.Pow(a.transform.position.x - c.transform.position.x, 2) + Mathf.Pow(a.transform.position.z - c.transform.position.z, 2);
                     bcDist = Mathf.Pow(b.transform.position.x - c.transform.position.x, 2) + Mathf.Pow(b.transform.position.z - c.transform.position.z, 2);
 
@@ -241,7 +245,7 @@ public class CreateRoom : MonoBehaviour
         dyb = dy + dya;
 
 
-        //print("Colliding!");
+       
         if (x > 20)
         {
             a.transform.position += new Vector3(dxa + 100, 0, dya + 100) * Time.deltaTime;
@@ -266,7 +270,7 @@ public class CreateRoom : MonoBehaviour
     {
         GameObject pf = (GameObject)Instantiate(m_Room);
 
-        foreach (GameObject a in m_LCubes)
+        foreach (GameObject a in m_LRooms)
         {
 
             a.transform.parent = pf.transform;
@@ -281,4 +285,12 @@ public class CreateRoom : MonoBehaviour
 
 
     }
+
+ 
+    public List<GameObject> Rooms
+    {
+        get { return m_LRooms; }
+       
+    }
+
 }
