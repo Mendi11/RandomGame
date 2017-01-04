@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FollowPlayer : MonoBehaviour {
+public class CameraPlayer : MonoBehaviour
 
-    public Vector3 m_OffsetCamera;
+{
+
     private Transform m_CamerFollow;
     private Transform m_Target;
     public float timeDamp;
@@ -25,7 +26,8 @@ public class FollowPlayer : MonoBehaviour {
     }
     void FixedUpdate()
     {
-        transform.position = Vector3.SmoothDamp(transform.position, m_CamerFollow.position, ref velocity, timeDamp); // Follows the gameobjebct behind the player 
+        transform.position = Vector3.SmoothDamp(transform.position, m_CamerFollow.position, ref velocity, timeDamp); // Follows the gameobjebct behind the player
+
         //and moves smooth to it with a dampTime 
     }
 
@@ -39,11 +41,7 @@ public class FollowPlayer : MonoBehaviour {
 
 	// Update is called once per frame
 	void LateUpdate ()
-    {
-        
+    { 
         transform.LookAt(m_Target.transform); // Looks att the target infront of the player;
-
-
-
     }
 }

@@ -35,6 +35,21 @@ public class EnemieBase : MonoBehaviour {
         get { return m_Health; }
         set { m_Health = value; }
     }
+    public int Damage
+    {
+        get { return m_Damage; }
+   
+    }
+
+    public void TakingDamage(int dmg)
+    {
+        m_Health -= dmg;
+        if (m_Health <= 0)
+        {
+            Destroy(gameObject);
+
+        }
+    }
 
 
 }

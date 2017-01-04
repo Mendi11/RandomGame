@@ -24,19 +24,22 @@ public class EnemyController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Invoke("SpawnSlowEnemies", 1f);
-        StopSpawn();
-
+        if (m_Rooms.done == true)
+        { 
+            Invoke("SpawnSlowEnemies", 1f);
+            StopSpawn();
+        }
     }
 
     void SpawnSlowEnemies()
     {
         int randTime = Random.Range(1, 5);
+        //Randoms how many enemies spawns. Then Randoms the room the enemy should spawn in.
         for (int i = 0; i < randTime; i++)
         {
             int randRoom = Random.Range(0, m_Rooms.Rooms.Count);
             GameObject enemie = Instantiate(m_SlowEnemie, m_Rooms.Rooms[randRoom].transform.position + new Vector3(0, 2, 0), Quaternion.identity);
-            enemie.GetComponent<SlowEnemie>().m_RoomSize = m_Rooms.Rooms[randRoom].transform.localScale;
+            enemie.GetComponent<SlowEnemie>().m_RoomSize = m_Rooms.Rooms[randRoom].transform.localScale; // Get the size of the room it spawnd in. And set it to the variable m_RoomSize
         }
        
         m_SpawnSlowEnemis = false;

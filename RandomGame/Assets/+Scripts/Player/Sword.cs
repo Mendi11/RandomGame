@@ -33,10 +33,9 @@ public class Sword : MonoBehaviour {
     }
     void OnCollisionEnter(Collision col)
     {
-        if (col.gameObject.tag == "Enemie")
+        if (col.gameObject.tag == "Enemy")
         {
-          
-            col.gameObject.GetComponent<SlowEnemie>().TakingDamage(m_Damage);
+            col.gameObject.GetComponent<EnemieBase>().TakingDamage(m_Damage);
         }
 
     }

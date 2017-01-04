@@ -10,7 +10,7 @@ TagManager:
   - Wall
   - PlayerCamera
   - Sword
-  - Enemie
+  - Enemy
   layers:
   - Default
   - TransparentFX

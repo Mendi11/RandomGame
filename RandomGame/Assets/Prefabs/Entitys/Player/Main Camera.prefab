@@ -103,8 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 584e442b6f15b7e4e8133fbec6c37a95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OffsetCamera: {x: 2, y: 2, z: -6}
-  timeDamp: 0.2
+  timeDamp: 0.3
 --- !u!124 &124650842753618722
 Behaviour:
   m_ObjectHideFlags: 1
