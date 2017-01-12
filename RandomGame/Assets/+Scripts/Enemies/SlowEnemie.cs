@@ -7,12 +7,12 @@ public class SlowEnemie : MonoBehaviour {
     enum AI_Movment { Patrol, Attack, MoveTowards, KnockBack }
     AI_Movment m_AIMovment;
 
-    KatanaSword m_Katana;
+    //KatanaSword m_Katana;
     EnemieBase m_Stats;
     public Vector3 m_RoomSize;
     Transform m_Player;
     Rigidbody m_Rgb;
-
+    KatanaSword m_Katana;
 
 
     float m_KnockBackPower = 500;
@@ -22,7 +22,9 @@ public class SlowEnemie : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        m_Katana = GameObject.Find("katana_sword").GetComponent<KatanaSword>();
+        // get children of the sword
+        m_Katana = this.gameObject.transform.GetChild(0).GetComponent<KatanaSword>();
+
         m_Stats = GetComponent<EnemieBase>();
         m_Player = GameObject.FindGameObjectWithTag("Player").transform;
         m_Rgb = GetComponent<Rigidbody>();
@@ -55,6 +57,7 @@ public class SlowEnemie : MonoBehaviour {
 
     void Patrol()
     {
+       // m_Katana.IdleAnimator();
         float dist = Vector3.Distance(m_Player.position,transform.position);// Check dist if it is lower than 8 it changes state
         if (dist < 8 && dist > 2)
         {
@@ -66,13 +69,18 @@ public class SlowEnemie : MonoBehaviour {
     }
     void MoveTowards()
     {
-       // m_Katana.IdleAnimator();
-         // Follow the player if its 
-         Vector3 moveDirection = m_Player.position - transform.position;
-        moveDirection = moveDirection.normalized;
-        m_Rgb.MovePosition(m_Rgb.position + moveDirection * m_Stats.Speed * Time.deltaTime);
+        //  m_Katana.IdleAnimator();
+        // Follow the player if its 
         float dist = Vector3.Distance(m_Player.position, transform.position);
-        if (dist < 1.5 && dist > 1)
+        Vector3 moveDirection = m_Player.position - transform.position;
+        moveDirection = moveDirection.normalized;
+       float angle = Vector3.Angle(transform.position, m_Player.position);
+
+        transform.rotation = Quaternion.Euler(new Vector3(0f, angle,0f)) ;
+        m_Rgb.MovePosition(m_Rgb.position + moveDirection * m_Stats.Speed * Time.deltaTime);
+
+        
+        if (dist < 1.5)
         {
             m_AIMovment = AI_Movment.Attack;
 
@@ -80,14 +88,9 @@ public class SlowEnemie : MonoBehaviour {
     }
     void Attack()
     {
-        print("Attacking");
-        float dist = Vector3.Distance(m_Player.position, transform.position);
-        m_Katana.AttackAnimator();
-        if (dist > 1.5f)
-        {
-            //m_AIMovment = AI_Movment.MoveTowards;
-
-        }
+        m_Katana.StartCoroutine(m_Katana.coroutinAni(2f));
+   
+    
 
     }
     void KnockBack()

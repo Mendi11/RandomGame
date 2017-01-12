@@ -11,6 +11,8 @@ TagManager:
   - PlayerCamera
   - Sword
   - Enemy
+  - KatanaSword
+  - Halls
   layers:
   - Default
   - TransparentFX

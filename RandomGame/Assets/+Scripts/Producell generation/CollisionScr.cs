@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class CollisionScr : MonoBehaviour {
 
+
     private bool m_Collision = true;
     private int coll = 0;
     private int x = 10;
-    public bool m_Seperating = true;
+    public GameObject m_Wall;
+    bool m_SetWalls = true;
     GameObject otherCube;
-    public GameObject hello;
+    GameObject hello;
     // Use this for initialization
     void Start ()
     {
@@ -33,6 +35,12 @@ public class CollisionScr : MonoBehaviour {
     }
     void Update()
     {
+        print(this.gameObject + " " + coll);
+        //if (hello.GetComponent<CreateRoom>().done == true && m_SetWalls)
+        //{
+        //    Walls();
+        //    m_SetWalls = !m_SetWalls;
+        //}
         while (m_Collision == true)
         {
             if (hello == null)
@@ -61,17 +69,69 @@ public class CollisionScr : MonoBehaviour {
             coll -= 1;
         }
 
+
+    }
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Halls")
+        {
+       
+
+        }
+
+    }
+    //void Walls()
+    //{
+    //    float cornerX = this.transform.localScale.x / 2;
+    //    float cornerZ = this.transform.localScale.z / 2;
+    //    GameObject wall = Instantiate(m_Wall);
+    //    if(this.transform.position.x < 0)
+    //        wall.transform.position = new Vector3(this.transform.position.x - cornerX, 5.5f, this.transform.position.z);
+    //    else
+    //        wall.transform.position = new Vector3(this.transform.position.x + cornerX, 5.5f, this.transform.position.z);
+
+    //    wall.transform.localScale = new Vector3(0.5f, 10, this.transform.localScale.z);
+    //    GameObject wall2 = Instantiate(m_Wall);
+    //    if (this.transform.position.z < 0)
+    //        wall2.transform.position = new Vector3(this.transform.position.x, 5.5f, this.transform.position.z + cornerZ);
+    //    else
+    //        wall2.transform.position = new Vector3(this.transform.position.x, 5.5f, this.transform.position.z - cornerZ);
+
+    //    wall2.transform.localScale = new Vector3(this.transform.localScale.x, 10, 0.5f);
+
+    //    GameObject wall3 = Instantiate(m_Wall);
+    //    if (this.transform.position.x < 0)
+    //        wall3.transform.position = new Vector3(this.transform.position.x + cornerX, 5.5f, this.transform.position.z);
+    //    else
+    //        wall3.transform.position = new Vector3(this.transform.position.x - cornerX, 5.5f, this.transform.position.z);
+
+    //    wall3.transform.localScale = new Vector3(0.5f, 10, this.transform.localScale.z);
+    //    GameObject wall4 = Instantiate(m_Wall);
+    //    if (this.transform.position.z < 0)
+    //        wall4.transform.position = new Vector3(this.transform.position.x, 5.5f, this.transform.position.z - cornerZ);
+    //    else
+    //        wall4.transform.position = new Vector3(this.transform.position.x, 5.5f, this.transform.position.z + cornerZ);
+
+    //    wall4.transform.localScale = new Vector3(this.transform.localScale.x, 10, 0.5f);
+    //    //wall.transform.name = " Wall " + this.gameObject;    
+    //    //print("GameObject: " + this.gameObject + "Wall: " + wall);
+    //    //print("LocalX: " + this.transform.localScale.x + "PosX: " + this.transform.position.x);
+
+
+    //}
+
+
+    public int COll
+    {
+        get { return coll; }
+        //set{ }
     }
 
-  
-        
 
-    
     public bool CollisionRoom
     {
         get { return m_Collision; }
         //set{ }
-
     }
     public GameObject OtherCube
     {
@@ -79,5 +139,6 @@ public class CollisionScr : MonoBehaviour {
         //set{ }
 
     }
+
 
 }

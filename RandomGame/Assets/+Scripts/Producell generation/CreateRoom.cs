@@ -5,7 +5,7 @@ using UnityEngine;
 public class CreateRoom : MonoBehaviour
 {
 
-   public List<GameObject> m_LRooms;
+    public List<GameObject> m_LRooms;
     List<GameObject> m_LHalls;
 
     GameObject m_Room;
@@ -20,6 +20,8 @@ public class CreateRoom : MonoBehaviour
     GameObject m_Cubes;
     [SerializeField]
     GameObject m_Camera;
+    [SerializeField]
+    GameObject m_NextLevel;
 
 
 
@@ -34,18 +36,20 @@ public class CreateRoom : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
-        
+        m_LRooms = new List<GameObject>();
         m_CameraCanvas = GameObject.Find("Camera");
         m_Canvas = GameObject.Find("Canvas"); 
         m_Collision = new List<bool>();
         start = false;
         done = false;
         m_Room = GameObject.FindGameObjectWithTag("ParentRoom");
-
+        
     }
 
     void Start()
     {
+
+       
         CreateRandomRoom();
         for (int i = 0; i < m_LRooms.Count; i++)
         {
@@ -54,64 +58,38 @@ public class CreateRoom : MonoBehaviour
     }
     void Update()
     {
-        ConnectRooms();
+
+        if (CheckCollision() && done == false)
+        { 
+            ConnectRooms();
+        }
+
     }
 
     // Update is called once per frame
     void ConnectRooms()
     {
-        int col = 0;
-        for (int i = 0; i < m_LRooms.Count; i++)
-        {
-            if (m_LRooms[i].GetComponent<CollisionScr>().CollisionRoom == false && start == true)
-            {
-                m_Collision[i] = true;
-            }
-            else
-            {
-                m_Collision[i] = false;
-            }
-        }
-        for (int i = 0; i < m_Collision.Count; i++)
-        {
-            if (m_Collision[i] == true)
-            {
-                col++;
-
-            }
-            else
-            {
-                col--;
-            }
-        }
-
-        if (col >= m_Collision.Count && done == false)
-        {
+    
             ConnectRoomsAlg();
             Parrent();
 
             for (int i = 0; i < m_LRooms.Count; i++)
             {
                 m_LRooms[i].GetComponent<BoxCollider>().isTrigger = false;
-
             }
             m_Canvas.SetActive(false);
             Destroy(m_CameraCanvas);
             Instantiate(m_Player, m_LRooms[0].transform.position + new Vector3(0, 3f, 2f), Quaternion.identity);
             Instantiate(m_Camera);
-
+            SetLevelPortal();
             done = true;
-        }
-        start = true;
-
-
     }
 
     void CreateRandomRoom()
     {
 
         // Create list for a room and randoms for how many cubes for x and z pos
-        m_LRooms = new List<GameObject>();
+        
         int planeRand = Random.Range(4, 10);
          
         for (int i = 0; i < planeRand; i++)
@@ -209,7 +187,7 @@ public class CreateRoom : MonoBehaviour
     {
         return a.transform.position.z > b.transform.position.z; // if a.z is bigger then b is below a
     }
-    public void SeperationAlg(GameObject a, GameObject b)
+    void SeperationAlg(GameObject a, GameObject b)
     {
 
         float aRight = a.transform.localScale.x / 2;
@@ -248,7 +226,7 @@ public class CreateRoom : MonoBehaviour
        
         if (x > 20)
         {
-            a.transform.position += new Vector3(dxa + 100, 0, dya + 100) * Time.deltaTime;
+            a.transform.position += new Vector3(dxa + 100, 0, dya + 100);
             b.transform.position += new Vector3(dxb, 0, dyb);
             x = 0;
         }
@@ -264,15 +242,17 @@ public class CreateRoom : MonoBehaviour
 
     public void Seperation(GameObject a,GameObject b)
     {
-        SeperationAlg(a, b);
+        if(a != null && b != null) // If either is null it will not try to seperat.
+            SeperationAlg(a, b);  
     }
     void Parrent()
     {
+
+        // Set all the Rooms and halls as children for a clone of an empty gameobject in the game.
         GameObject pf = (GameObject)Instantiate(m_Room);
 
         foreach (GameObject a in m_LRooms)
         {
-
             a.transform.parent = pf.transform;
 
         }
@@ -285,12 +265,54 @@ public class CreateRoom : MonoBehaviour
 
 
     }
-
- 
-    public List<GameObject> Rooms
+    void SetLevelPortal()
     {
-        get { return m_LRooms; }
-       
+        // Setting the Level portal on the farthest room from the start room.
+        float temp = Vector3.Distance(m_LRooms[0].transform.position, m_LRooms[1].transform.position); 
+        int RoomNR = 1;  
+        for (int i = 2; i < m_LRooms.Count; i++)
+        {
+            if (temp < Vector3.Distance(m_LRooms[0].transform.position, m_LRooms[i].transform.position))
+            {
+                temp = Vector3.Distance(m_LRooms[0].transform.position, m_LRooms[i].transform.position); 
+                RoomNR = i;
+            }
+        }
+        Instantiate(m_NextLevel, m_LRooms[RoomNR].transform.position + new Vector3(0, 3, 0), Quaternion.identity); // Spawn the portal on the farthest room.
+
+
+    }
+    bool CheckCollision()
+    {
+        int col = 0;
+        for (int i = 0; i < m_LRooms.Count; i++)
+        {
+            if (m_LRooms[i].GetComponent<CollisionScr>().COll == 0) // If there is no collision it will add one to Col
+            {
+                col++;
+            }
+        }
+        for (int i = 0; i < m_LRooms.Count; i++)
+        {
+            if (m_LRooms[i].GetComponent<CollisionScr>().COll != 0) // If there is a collision it will remove one form col
+            {
+                col--;
+            }
+        }
+
+
+        if (col == m_LRooms.Count) // If all the there are no collision the col will be equal to the number of rooms in the scene
+            return true;
+        else
+            return false; 
+
+
+    }
+
+
+    public List<GameObject> Rooms // Get for Room.
+    {
+        get { return m_LRooms; }   
     }
 
 }

@@ -7,29 +7,27 @@ public class Level : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-      
-        
-        	
+
+    
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        { 
-            if (Application.loadedLevel == 1)
-            {
-                Application.LoadLevel(0);
-                
+       
+    }
 
-            }
-            else
-            {
+    void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Player")
+        {
+            if(Application.loadedLevelName == "Secne01")
                 Application.LoadLevel(1);
-              
+            else
+                Application.LoadLevel(0);
 
-            }
         }
+
 
     }
 }
