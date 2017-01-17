@@ -24,10 +24,10 @@ public class EnemyController : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (m_Rooms.done == true)
-        { 
-            Invoke("SpawnSlowEnemies", 1f);
-            StopSpawn();
+        if (m_Rooms.done == true && m_SpawnSlowEnemis)
+        {
+            SpawnSlowEnemies();
+        
         }
     }
 
@@ -44,12 +44,6 @@ public class EnemyController : MonoBehaviour {
        
         m_SpawnSlowEnemis = false;
     }
-    void StopSpawn()
-    {
-        if(!m_SpawnSlowEnemis)
-            CancelInvoke("SpawnSlowEnemies");
 
-
-    }
 
 }
